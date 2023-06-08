@@ -36,15 +36,20 @@ const MenuHead = () => {
                     <span>Active contacts (0)</span>
                 </div>
             )}
+            {menu === "archive" && (
+                <div className="head-bottom">
+                    <span>archive list (0)</span>
+                </div>
+            )}
         </StyledHead>
     );
 };
 
-const MenuBodyItem = ({data, ind}) => {
-    const {user} = useAuth();
-    const {setCurrentConv} = useData();
-    const name = data.members.filter((el) => el !== user.username)
-    const lastMassge = data.messeges[data.messeges.length - 1]
+const MenuBodyItem = ({ data, ind }) => {
+    const { user } = useAuth();
+    const { setCurrentConv } = useData();
+    const name = data.members.filter((el) => el !== user.username);
+    const lastMassge = data.messeges[data.messeges.length - 1];
 
     return (
         <StyledBodyItem onClick={setCurrentConv.bind(null, ind)}>
@@ -62,7 +67,7 @@ const MenuBodyItem = ({data, ind}) => {
 };
 
 const MenuBody = () => {
-
+    const { menu } = useAuth();
     const { conversations } = useData();
 
     React.useEffect(() => {
@@ -71,7 +76,11 @@ const MenuBody = () => {
     }, []);
     return (
         <StyledBody>
-            {conversations && conversations.map((el,key) => <MenuBodyItem data={el} ind={key}/>)}
+            {menu === "chats" &&
+                conversations &&
+                conversations.map((el, key) => (
+                    <MenuBodyItem data={el} ind={key} />
+                ))}
         </StyledBody>
     );
 };
@@ -96,7 +105,7 @@ const StyledHead = styled.div`
         display: flex;
         justify-content: space-between;
         box-sizing: border-box;
-        padding: 0 10px;
+        padding: 0 15px;
 
         span {
             font-size: 35px;
@@ -133,7 +142,7 @@ const StyledHead = styled.div`
         justify-content: ${({ menu }) =>
             menu === "chats" ? "center" : "default"};
         align-items: center;
-        padding: 12px 10px;
+        padding: 12px 15px;
 
         .search-div {
             width: 80%;

@@ -28,27 +28,12 @@ const ChatBody = ({ ml }) => {
     const { currentConv, conversations } = useData();
     const [messages, setMessages] = React.useState([]);
 
-    React.useEffect(() => {
-        let theList = [];
-        if (conversations) {
-            let tmpList = [];
-            let currentSender;
-            conversations[currentConv].messeges.map((el, ind) => {
-                currentSender = el.sender
-                tmpList.push(el)
-                if (conversations[currentConv].messeges[ind + 1]?.sender !== currentSender) {
-                    theList.push(tmpList)
-                    tmpList = []
-                }
-            })
-            setMessages(theList)
-        }
-    }, [conversations, currentConv]);
     return (
         <Styled className="check">
-            {messages &&
-                messages.map((el, ind) => <ChatItem massage={el}/>)
-            }
+            {conversations &&
+                conversations[currentConv].messeges.map((el, ind) => (
+                    <ChatItem key={ind} message={el} />
+                ))}
         </Styled>
     );
 };

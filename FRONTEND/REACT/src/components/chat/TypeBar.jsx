@@ -7,6 +7,7 @@ import { MdSend } from "react-icons/md";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { AiFillLike, AiFillPicture } from "react-icons/ai";
 import { useAuth } from "../../context/AuthContext";
+import { useData } from "../../context/DataContext";
 
 const TypeBar = ({ setShowEm, setNewM, chosenEmoji, setFile, setShwoImC }) => {
     const [value, setValue] = React.useState({});
@@ -16,15 +17,28 @@ const TypeBar = ({ setShowEm, setNewM, chosenEmoji, setFile, setShwoImC }) => {
     const fref = React.useRef(null);
     const { show, setShow } = useAuth();
 
+    const { setConversations, conversations, currentConv } = useData();
+
+    const handleClick = (ev) => {
+        console.log(ev.clientY)
+    }
     const send = () => {
         //todo
-        setNewM(ref.current.value);
+        const conv = [...conversations]
+        // console.log(conv[currentConv])
+        const convMesseges = [
+            ...conv[currentConv].messeges,
+            { sender: 1, text: ref.current.value, img: null },
+        ];
+        conv[currentConv].messeges = convMesseges;
+        setConversations(conv);
+        // console.log(conversations)
     };
 
-    const onEmojiClick = (event, emojiObject) => {
-        ref.current.value = ref.current.value + "j";
-        console.log(emojiObject);
-    };
+    // const onEmojiClick = (event, emojiObject) => {
+    //     ref.current.value = ref.current.value + "j";
+    //     console.log(emojiObject);
+    // };
 
     const handleOpen = () => {
         if (!isOpened) {
@@ -40,13 +54,13 @@ const TypeBar = ({ setShowEm, setNewM, chosenEmoji, setFile, setShwoImC }) => {
         let reader = new FileReader();
         let inFile = e.target.files[0];
         reader.onloadend = () => {
-           setFile({
-              picFile: inFile, 
-              imagePreviewUrl: reader.result
-           })
+            setFile({
+                picFile: inFile,
+                imagePreviewUrl: reader.result,
+            });
         };
         reader.readAsDataURL(inFile);
-        setShwoImC(true)
+        setShwoImC(true);
     };
 
     React.useEffect(() => {
@@ -87,13 +101,17 @@ const TypeBar = ({ setShowEm, setNewM, chosenEmoji, setFile, setShwoImC }) => {
         }
     }, [chosenEmoji]);
 
-    const handle = (para) => {};
+    const handle = () => {
+        setShowEm((c) => !c)
+        setShow({ shutAll: false, menuName: "em-menu" });
+
+    };
     return (
         <Styled>
             <div className="bar-container">
                 <div className="input-con">
                     <input ref={ref} type="text" />
-                    <div className="send" onClick={send}>
+                    <div className="send" onClick={handleClick}>
                         <MdSend size={28} color="#3fcc7c" />
                     </div>
                 </div>
@@ -114,7 +132,7 @@ const TypeBar = ({ setShowEm, setNewM, chosenEmoji, setFile, setShwoImC }) => {
                                 className="down"
                                 color="black"
                                 size={27}
-                                style={{ transform: "rotate(180deg)", }}
+                                style={{ transform: "rotate(180deg)" }}
                             />
                         </div>
                     )}
@@ -122,7 +140,7 @@ const TypeBar = ({ setShowEm, setNewM, chosenEmoji, setFile, setShwoImC }) => {
                         <>
                             <div
                                 className="du item"
-                                onClick={() => setShowEm((c) => !c)}
+                                onClick={handle}
                             >
                                 <BsEmojiSmile
                                     style={{ pointerEvents: "none" }}
@@ -137,7 +155,7 @@ const TypeBar = ({ setShowEm, setNewM, chosenEmoji, setFile, setShwoImC }) => {
                                     onClick={atatchFile}
                                 />
                             </div>
-                            <div className="du item">
+                            <div className="du item mic" style={{}}>
                                 <BsFillMicFill color="black" size={25} />
                             </div>
                         </>
@@ -148,7 +166,7 @@ const TypeBar = ({ setShowEm, setNewM, chosenEmoji, setFile, setShwoImC }) => {
                 className="pfile"
                 ref={fref}
                 type="file"
-                style={{display: 'none'}}
+                style={{ display: "none" }}
                 onChange={onChoiceFile}
             />
         </Styled>
@@ -257,6 +275,12 @@ const Styled = styled.div`
                 right: 0;
                 bottom: 1000px;
                 margin-bottom: 550px;
+            }
+
+            .mic {
+                &:hover {
+                    cursor: not-allowed ;
+                }
             }
         }
     }

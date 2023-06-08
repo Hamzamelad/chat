@@ -20,7 +20,7 @@ class ConversationSerializer(serializers.ModelSerializer):
         mess = []
         for m in obj.messeges.all():
             if m.img :
-                mess.append({"text":m.text, "sender": m.sender.id,"img": m.img.url })
+                mess.append({"text":m.text, "sender": m.sender.id,"img": "http://localhost:8000" + m.img.url })
             else:
                 mess.append({"text":m.text, "sender": m.sender.id,"img": None})
                 

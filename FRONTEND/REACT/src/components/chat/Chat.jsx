@@ -11,6 +11,7 @@ import { StyledLike, StyledSendBar } from "./StyledComponents";
 
 import ChatHead from "./ChatHead";
 import ChatBody from "./chatBody/ChatBody";
+import EmojiPickerComp from "./EmojiPicker";
 
 import ContenctProfile from "./ContenctProfile";
 import TypeBar from "./TypeBar";
@@ -124,7 +125,7 @@ const SendBar = () => {
 
 const Chat = () => {
     const { show, setShow } = useAuth();
-    const { currentConv, conversations } = useData();
+    const { currentConv, conversations, setConversations } = useData();
     const [showEm, setShowEm] = React.useState(false);
     const [showImC, setShwoImC] = React.useState(false);
     const [newM, setNewM] = React.useState("");
@@ -204,23 +205,17 @@ const Chat = () => {
 
     const sendIm = () => {
         if (file.imagePreviewUrl) {
-            setMl((c) => [
-                ...c,
-                <MassageContainer>
-                    <div className="photo-message">
-                        <div className="img">
-                            <img src={file.imagePreviewUrl} alt="photo" />
-                        </div>
-                    </div>
-                </MassageContainer>,
-            ]);
+            const conv = [...conversations];
+            // console.log(conv[currentConv])
+            const convMesseges = [
+                ...conv[currentConv].messeges,
+                { sender: 1, text: "", img: file.imagePreviewUrl },
+            ];
+            conv[currentConv].messeges = convMesseges;
+            setConversations(conv);
+            // console.log(conversations)
         }
         setShwoImC(false);
-    };
-
-    const onEmojiClick = (emojiObject, event) => {
-        setChosenEmoji(emojiObject.emoji);
-        console.log(emojiObject.emoji);
     };
 
     return (
@@ -235,10 +230,8 @@ const Chat = () => {
                 setFile={setFile}
                 setShwoImC={setShwoImC}
             />
-            {showEm && (
-                <div className="ep-container">
-                    <EmojiPicker onEmojiClick={onEmojiClick} />
-                </div>
+            {showEm && !show.shutAll && show.menuName === "em-menu" && (
+                <EmojiPickerComp setEm={setChosenEmoji} />
             )}
             {showImC && (
                 <div className="im-container">

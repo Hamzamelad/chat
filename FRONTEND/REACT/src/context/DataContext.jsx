@@ -9,10 +9,12 @@ const DataContextProvider = ({ children }) => {
     const [currentConv, setCurrentConv] = useState(0);
 
     const getConversations = () => {
+        console.log('new conv')
         axios
             .get("http://127.0.0.1:8000/api/conversation/list/")
             .then((response) => {
                 setConversations(response.data);
+                console.log(1,response.data)
             })
             .catch((err) => console.log(err));
     };
@@ -20,10 +22,15 @@ const DataContextProvider = ({ children }) => {
     useEffect(() => {
         getConversations();
     }, []);
+
+    useEffect(() => {
+        console.log(conversations);
+    }, [conversations]);
     return (
         <DataContext.Provider
             value={{
                 conversations: conversations,
+                setConversations: setConversations,
                 currentConv: currentConv,
                 setCurrentConv: setCurrentConv,
             }}

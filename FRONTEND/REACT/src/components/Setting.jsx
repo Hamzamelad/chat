@@ -71,7 +71,8 @@ const Setting = () => {
                 <h3>general</h3>
                 <span className="header ">theme</span>
                 <span className="dis ">app color theme</span>
-                <div className="dropdown  dd-button" onClick={handle}>
+                <div className="dropdown  dd-button">
+                    <div className="cl dd-button" onClick={handle}/>
                     {mode === "light" ? (
                         <BsSunFill
                             className=" dd-button"
@@ -185,6 +186,14 @@ const Styled = styled.div`
             align-items: center;
             padding: 0 10px;
             position: relative;
+
+            .cl {
+                width: 100%;
+                height: 100%;
+                background-color: transparent;
+                position: absolute;
+                right: 0;
+            }
 
             span {
                 margin-left: 10px;
